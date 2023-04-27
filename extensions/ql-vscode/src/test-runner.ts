@@ -112,6 +112,9 @@ export class TestRunner extends DisposableObject {
             },
             token,
             uri,
+            false,
+            // TODO: This is currently the only place where we set `makeSelected` to `false`.
+            // If we delete this code, consider removing the parameter from `openDatabase` and `setCurrentDatabaseItem`.
           );
           await this.databaseManager.renameDatabaseItem(
             reopenedDatabase,

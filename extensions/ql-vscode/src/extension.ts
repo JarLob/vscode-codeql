@@ -125,6 +125,8 @@ import { TestManager } from "./query-testing/test-manager";
 import { TestRunner } from "./query-testing/test-runner";
 import { TestManagerBase } from "./query-testing/test-manager-base";
 import { NewQueryRunner, QueryRunner, QueryServerClient } from "./query-server";
+import { QueriesPanel } from "./queries-panel/queries-panel";
+import { QueryDiscovery } from "./queries-panel/query-discovery";
 
 /**
  * extension.ts
@@ -197,8 +199,21 @@ function getCommands(
       },
     );
 
+  void extLogger.log("Initializing queries panel.");
+  const workspaceFolder = workspace.workspaceFolders?.[0];
+  if (!workspaceFolder) {
+    throw Error("No workspace folder found.");
+  }
+
+  const queryDiscovery = new QueryDiscovery(workspaceFolder, cliServer);
+  queryDiscovery.refresh();
+
+  const queriesPanel = new QueriesPanel(queryDiscovery);
+  queriesPanel.thisIsBad();
+
   return {
     "codeQL.openDocumentation": async () => {
+      queriesPanel.thisIsBad();
       await env.openExternal(Uri.parse("https://codeql.github.com/docs/"));
     },
     "codeQL.restartQueryServer": restartQueryServer,
